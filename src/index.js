@@ -5,9 +5,17 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import { firebaseConfig } from './firebase/firebase-config';
+// import { companyAPI } from './features/company/companyAPI';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
+// Initialize Firebase
+// eslint-disable-next-line no-undef
+firebase.initializeApp(firebaseConfig);
+
+// companyAPI.getPlaces();
+// companyAPI.getInventory();
 
 root.render(
   <React.StrictMode>
