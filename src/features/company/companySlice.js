@@ -38,11 +38,15 @@ export const { getPlaces, getInventory, addInventory, deleteInventory, updateInv
 export const getPlacesThunk = () => (dispatch) => {
   return companyAPI.getPlaces()
         .then(response => {
-          let docs = response.docs.map(x => ({
-            id: x.id,
-            data: x.data(),
-            parts: x.data().parts && x.data().parts?.map(part => part.id)
-          }));
+
+          let docs = response.docs.map(x => {
+            const data = x.data()
+            return {
+              id: x.id,
+              name: data.name,
+              parts: data.parts && data.parts.map(part => part.id)
+            }
+          });
           dispatch(getPlaces(docs));
         })
 }
@@ -51,8 +55,8 @@ export const getInventoryThunk = () => (dispatch) => {
         .then(response => {
           let docs = response.docs.map(x => ({
             id: x.id,
-            data: x.data(),
-            placeId: x.data().place ? x.data().place.id : null,
+            // data: x.data(),
+            // placeId: x.data().place ? x.data().place.id : null,
           }));
           dispatch(getInventory(docs));
         });
