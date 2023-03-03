@@ -31,7 +31,7 @@ export const companySlice = createSlice({
       })
     },
   },
-});
+}); 
 
 export const { getPlaces, getInventory, addInventory, deleteInventory, updateInventory } = companySlice.actions;
 

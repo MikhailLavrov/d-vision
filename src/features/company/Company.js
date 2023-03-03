@@ -1,94 +1,84 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import c from './Company.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPlacesThunk, getInventoryThunk } from './companySlice';
-
-// ===================== Utils ======================
-const getHeadItems = (places) => {
-  const ids = [];
-  const parts = [];
-
-  places.forEach(place => {
-    if (place.parts) {
-      return place.parts.forEach(part => parts.push(part))
-    }
-  });
-
-  places.forEach(place => ids.push(place.id));
-
-  const uniqueIds = ids.filter(id => !parts.includes(id));
-
-  return places.filter(place => uniqueIds.includes(place.id)).map(i => i.id);
-}
-const getRecursedPlacesArr = (places, partIDs) => {
-  let parsedPlaces = []
-  let result = []
-  
-  places.forEach(place => {
-    let isNewPlace = parsedPlaces.find(parsed => parsed === place.id) || (partIDs && !partIDs.find(id => id === place.id))
-    
-    if (isNewPlace) return parsedPlaces.push(place.id)
-
-    if (place.parts) {
-      result.push({...place, parts: getRecursedPlacesArr(places, place.parts)})
-    } else {
-      result.push(place)
-    }
-  })
-  
-  return result
-}
-const getInventoryCount = (inventory, placeId) => inventory.filter(item => item.placeId === placeId).length;
-// ==================================================
+import { getHeadItems, getRecursedPlacesArr } from './companyUtils';
 
 export const Company = () => {
   const dispatch = useDispatch();
-  const places = useSelector(state => state.company.places);
-  const inventory = useSelector(state => state.company.inventory);
-  const [ selectedPlaceId, setSelectedPlaceId ] = useState(null);
+  const [selectedPlaceId, setSelectedPlaceId] = useState(null);
+  const [editingNameId, setEditingNameId] = useState(null);
+  const [editingCountId, setEditingCountId] = useState(null);
+
+  const places = useSelector((state) => state.company.places) || [];
+  const inventory = useSelector((state) => state.company.inventory) || [];
+
+  const headItems = getHeadItems(places);
+  const recursedPlaces = getRecursedPlacesArr(places, headItems, inventory);
 
   useEffect(() => {
     dispatch(getPlacesThunk());
     dispatch(getInventoryThunk());
   }, [dispatch]);
-  
-  // ===================== Places ======================
-  // Определили головные places
-  const headPlaces = getHeadItems(places)
-  // Получили структурированный массив places (с учетом зависимостей)
-  const recursedPlaces = getRecursedPlacesArr(places, headPlaces);
-  
+
   const handleShowInventory = (e) => {
     e.stopPropagation();
-    console.log(e.target);
-    console.log(e.target.id);
     setSelectedPlaceId(e.target.id);
   };
-  
+
+  const handleNameEdit = (e) => {
+    setEditingNameId(null); // Stop editing
+    const placeId = e.target.parentElement.id;
+    const name = e.target.textContent;
+    // TODO: Update the state with the new name
+  };
+
+  const handleCountEdit = (e) => {
+    setEditingCountId(null); // Stop editing
+    const itemId = e.target.parentElement.parentElement.id;
+    const count = e.target.textContent;
+    // TODO: Update the state with the new count
+  };
+
+  console.log('Render');
+
   const PlacesTree = ({ nodes }) => {
-    if (!nodes || nodes.length === 0) return null
-    
+    if (!nodes || nodes.length === 0) return null;
+
     return (
       <ul>
         {nodes.map((node) => (
           <li key={node.id} onClick={handleShowInventory}>
-            {node.parts 
-            ? (<details open>
-                <summary>
+            {node.parts ? (
+              <details open>
+                <summary id={node.id}>
                   <div className={c.places__placeSummary}>
-                    <span className={`${c.countBadge} ${getInventoryCount(inventory, node.id) === 0 ? c.countBadgeRed : c.countBadgeGreen}`}>
-                      {getInventoryCount(inventory, node.id)}
+                    <span className={`${c.countBadge} ${node.localInventCount === 0 ? c.countBadgeRed : c.countBadgeGreen}`}>
+                      {node.localInventCount}
                     </span>
-                    <p id={node.id}>{node.name}</p>
+                    <p
+                      id={node.id}
+                      contentEditable={editingNameId === node.id}
+                      onBlur={handleNameEdit}
+                      onFocus={() => setEditingNameId(node.id)}>
+                      {node.name}
+                    </p>
                   </div>
                 </summary>
                 <PlacesTree nodes={node.parts} />
-              </details>) 
-            : (<div className={c.places__placeInner}>
-                <span className={`${c.countBadge} ${getInventoryCount(inventory, node.id) === 0 ? c.countBadgeRed : c.countBadgeGreen}`}>
-                  {getInventoryCount(inventory, node.id)}
+              </details>
+            ) : (
+              <div id={node.id} className={c.places__placeInner}>
+                <span className={`${c.countBadge} ${node.localInventCount === 0 ? c.countBadgeRed : c.countBadgeGreen}`}>
+                  {node.localInventCount}
                 </span>
-                <p id={node.id}>{node.name}</p>
+                <p
+                  id={node.id}
+                  contentEditable={editingCountId === node.id}
+                  onBlur={handleCountEdit}
+                  onFocus={() => setEditingCountId(node.id)}>
+                  {node.name}
+                </p>
               </div>
             )}
           </li>
@@ -96,16 +86,19 @@ export const Company = () => {
       </ul>
     );
   };
-  
+
   // ===================== Inventory ======================
-  const allInventory = inventory
-  .filter(item => item.placeId === selectedPlaceId)
-  .map(item => (
-    <li key={item.id}>
-      <p>Название <span>{item.name}</span></p>
-      <p>Количество <span>{item.count}</span></p>
-    </li>
-  ));
+  const allInventory = useMemo(() => {
+    return inventory
+      .filter((item) =>item.placeId === selectedPlaceId)
+      .map(item => (
+        <li key={item.id}>
+          <p>Название <span>{item.name}</span></p>
+          <p>Количество <span>{item.count}</span></p>
+        </li>
+      ));
+  }, [inventory, selectedPlaceId]);
+  
     
   // ===================== FC RETURN ======================
   return (
