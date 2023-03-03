@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import c from './Company.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPlacesThunk, getInventoryThunk } from './companySlice';
@@ -6,15 +6,14 @@ import { getHeadItems, getRecursedPlacesArr } from './companyUtils';
 
 export const Company = () => {
   const dispatch = useDispatch();
-  const [selectedPlaceId, setSelectedPlaceId] = useState(null);
-  const [editingNameId, setEditingNameId] = useState(null);
-  const [editingCountId, setEditingCountId] = useState(null);
+  const [selectedPlace, setSelectedPlaceId] = useState(null);
 
-  const places = useSelector((state) => state.company.places) || [];
-  const inventory = useSelector((state) => state.company.inventory) || [];
+  const statePlaces = useSelector((state) => state.company.places) || [];
+  const stateInventory = useSelector((state) => state.company.inventory) || [];
 
-  const headItems = getHeadItems(places);
-  const recursedPlaces = getRecursedPlacesArr(places, headItems, inventory);
+  const headItems = getHeadItems(statePlaces);
+  const recursedPlaces = getRecursedPlacesArr(statePlaces, headItems, stateInventory);
+  const isThereInventory = stateInventory.filter((item) => item.placeId === selectedPlace);
 
   useEffect(() => {
     dispatch(getPlacesThunk());
@@ -25,24 +24,9 @@ export const Company = () => {
     e.stopPropagation();
     setSelectedPlaceId(e.target.id);
   };
-
-  const handleNameEdit = (e) => {
-    setEditingNameId(null); // Stop editing
-    const placeId = e.target.parentElement.id;
-    const name = e.target.textContent;
-    // TODO: Update the state with the new name
-  };
-
-  const handleCountEdit = (e) => {
-    setEditingCountId(null); // Stop editing
-    const itemId = e.target.parentElement.parentElement.id;
-    const count = e.target.textContent;
-    // TODO: Update the state with the new count
-  };
-
-  console.log('Render');
-
-  const PlacesTree = ({ nodes }) => {
+  
+  // ===================== Places FC ======================
+  const Places = ({ nodes }) => {
     if (!nodes || nodes.length === 0) return null;
 
     return (
@@ -56,29 +40,19 @@ export const Company = () => {
                     <span className={`${c.countBadge} ${node.localInventCount === 0 ? c.countBadgeRed : c.countBadgeGreen}`}>
                       {node.localInventCount}
                     </span>
-                    <p
-                      id={node.id}
-                      contentEditable={editingNameId === node.id}
-                      onBlur={handleNameEdit}
-                      onFocus={() => setEditingNameId(node.id)}>
+                    <p id={node.id}>
                       {node.name}
                     </p>
                   </div>
                 </summary>
-                <PlacesTree nodes={node.parts} />
+                <Places nodes={node.parts} />
               </details>
             ) : (
               <div id={node.id} className={c.places__placeInner}>
                 <span className={`${c.countBadge} ${node.localInventCount === 0 ? c.countBadgeRed : c.countBadgeGreen}`}>
                   {node.localInventCount}
                 </span>
-                <p
-                  id={node.id}
-                  contentEditable={editingCountId === node.id}
-                  onBlur={handleCountEdit}
-                  onFocus={() => setEditingCountId(node.id)}>
-                  {node.name}
-                </p>
+                <p id={node.id}>{node.name}</p>
               </div>
             )}
           </li>
@@ -87,32 +61,48 @@ export const Company = () => {
     );
   };
 
-  // ===================== Inventory ======================
-  const allInventory = useMemo(() => {
-    return inventory
-      .filter((item) =>item.placeId === selectedPlaceId)
-      .map(item => (
+  // =================== Inventory FC =====================
+
+  const Inventory = () => {
+    return isThereInventory.map((item) => {
+      // const [count, setCount] = useState(item.count);
+  
+      // const handleDecrement = () => setCount(count - 1);
+      // const handleIncrement = () => setCount(count + 1);
+  
+      return (
         <li key={item.id}>
           <p>Название <span>{item.name}</span></p>
-          <p>Количество <span>{item.count}</span></p>
+          <p>
+            Количество{" "}
+            {statePlaces?.filter((place) => place.id === selectedPlace)[0]?.parts ? (
+              <span>{item.count}</span>
+            ) : (
+              <>
+                {/* <button onClick={handleDecrement}>-</button> */}
+                <span>{item.count}</span>
+                {/* <button onClick={handleIncrement}>+</button> */}
+              </>
+            )}
+          </p>
         </li>
-      ));
-  }, [inventory, selectedPlaceId]);
-  
-    
-  // ===================== FC RETURN ======================
+      );
+    });
+  };
+
+  // ================= Company FC RETURN ==================
   return (
     <section className={c.company}>
       <div className={c.company__places}>
         <h2>Компания</h2>
-        <PlacesTree nodes={recursedPlaces} />
+        <Places nodes={recursedPlaces} />
       </div>
       <div className={c.company__inventory}>
-        {selectedPlaceId ? (
+        {selectedPlace ? (
           <>
-            <h2>Инвентарь в {places.find((place) => place.id === selectedPlaceId).name}:</h2>
-            {allInventory.length > 0 ? (
-              <ul>{allInventory}</ul>
+            <h2>Инвентарь в {statePlaces.find((place) => place.id === selectedPlace).name}</h2>
+            {isThereInventory.length > 0 ? (
+              <ul>{Inventory()}</ul>
             ) : (
               <p>Здесь ничего нет</p>
             )}
@@ -123,5 +113,4 @@ export const Company = () => {
       </div>
     </section>
   );
-
 }
