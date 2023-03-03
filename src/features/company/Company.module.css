@@ -29,9 +29,27 @@ details[open] > summary {
 summary {
   padding: 10px;
   margin-bottom: 5px;
+  width: 100%;
 
   background-color: rgba(30, 0, 255, 0.066);
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+summary::after {
+  position: absolute;
+  left: calc(100% - 30px);
+  content: "←";
+  font-size: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+details[open] > summary::after {
+  transform: rotate(-90deg);
 }
 
 .company__places li {
@@ -64,3 +82,41 @@ summary {
   color: brown;
 }
 
+.places__placeSummary,
+.places__placeInner {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.places__placeSummary p,
+.places__placeInner p {
+  margin: 0;
+}
+
+.countBadge {
+  padding: 5px;
+  min-width: 22px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  color: aliceblue;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+  
+  border-radius: 50%;
+}
+
+.countBadgeGreen {
+  background-color: rgba(110, 184, 0, 0.8);
+}
+
+.countBadgeRed {
+  background-color: rgba(184, 0, 0, 0.8);
+}
