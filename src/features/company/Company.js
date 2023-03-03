@@ -58,10 +58,11 @@ export const Company = () => {
   // Получили структурированный массив places (с учетом зависимостей)
   const recursedPlaces = getRecursedPlacesArr(places, headPlaces);
   
-  const handleShowInventory = (nodeId, event) => {
-    event.stopPropagation();
-
-    setSelectedPlaceId(nodeId);
+  const handleShowInventory = (e) => {
+    e.stopPropagation();
+    console.log(e.target);
+    console.log(e.target.id);
+    setSelectedPlaceId(e.target.id);
   };
   
   const PlacesTree = ({ nodes }) => {
@@ -70,15 +71,15 @@ export const Company = () => {
     return (
       <ul>
         {nodes.map((node) => (
-          <li key={node.id}>
+          <li key={node.id} onClick={handleShowInventory}>
             {node.parts 
-            ? (<details>
+            ? (<details open>
                 <summary>
                   <div className={c.places__placeSummary}>
                     <span className={`${c.countBadge} ${getInventoryCount(inventory, node.id) === 0 ? c.countBadgeRed : c.countBadgeGreen}`}>
                       {getInventoryCount(inventory, node.id)}
                     </span>
-                    <p>{node.name}</p>
+                    <p id={node.id}>{node.name}</p>
                   </div>
                 </summary>
                 <PlacesTree nodes={node.parts} />
@@ -87,7 +88,7 @@ export const Company = () => {
                 <span className={`${c.countBadge} ${getInventoryCount(inventory, node.id) === 0 ? c.countBadgeRed : c.countBadgeGreen}`}>
                   {getInventoryCount(inventory, node.id)}
                 </span>
-                <p>{node.name}</p>
+                <p id={node.id}>{node.name}</p>
               </div>
             )}
           </li>
