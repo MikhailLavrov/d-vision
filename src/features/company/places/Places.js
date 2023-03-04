@@ -19,8 +19,8 @@ export const Places = ({ nodes, handleShowInventory }) => {
                   </p>
                   <p className={`${c.places__totalCountBadge}`}>
                     <span>Общий инвентарь: </span>
-                    <span className={`${c.places__countBadge} ${node.localInventCount === 0 ? c.places__countBadgeRed : c.places__countBadgeGreen}`}>
-                      {node.totalInventCount}
+                    <span className={`${c.places__countBadge} ${node.total === 0 ? c.places__countBadgeRed : c.places__countBadgeGreen}`}>
+                      {node.inventoryTotal}
                     </span>
                   </p>
                 </div>
