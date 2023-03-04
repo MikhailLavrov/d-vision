@@ -32,38 +32,30 @@ export const Company = () => {
   //* ================== Работа с местами ====================
   const headItems = getHeadItems(statePlaces);
   const recursedPlaces = getRecursedPlacesArr(statePlaces, headItems, stateInventory);
-
-
   
   // ================= Company FC RETURN ==================
   return (
     <section className={c.company}>
       {/* Места */}
-      <div className={c.company__places}>
+      <div className={c.company__placesWrapper}>
         <h2>Компания</h2>
         <Places nodes={recursedPlaces} handleShowInventory={handleShowInventory} />
       </div>
-      <div className={c.company__inventory}>
-
       {/* Инвентарь */}
+      <div className={c.company__inventoryWrapper}>
+
       {/* Если выбрали место */}
       {selectedPlace ? 
       <>
-        <h2>Инвентарь в {statePlaces.find((place) => place.id === selectedPlace).name}</h2>
-
-        {isThereInventory.length > 0
-        ? (
-          <>
-            <ul>
-              <Inventory isThereInventory={isThereInventory} 
-                         statePlaces={statePlaces} 
-                         selectedPlace={selectedPlace} />
-            </ul>
+        <div className={c.company__header}>
+          <h2>Инвентарь в {statePlaces.find((place) => place.id === selectedPlace).name}</h2>
+          
             {/* Для тех у кого нет дочерних добавляем кнопку ДОБАВИТЬ */}
             {!statePlaces.find((place) => place.id === selectedPlace).parts 
             ? (
               <>
-                <button type='button' onClick={() => {setShowAddInventory(true)}}>Добавить</button>
+                <button className={c.place__addButton} type='button' onClick={() => {setShowAddInventory(true)}} 
+                  style={{display: showAddInventory ? 'none' : 'block'}}>Добавить</button>
                 
                 {/* Открытая форма добавления */}
                 {showAddInventory && (
@@ -89,14 +81,21 @@ export const Company = () => {
                 )}
               </>
             ) : ''}
+        </div>
+        
+        {isThereInventory.length > 0
+        ? (
+          <>
+            <Inventory isThereInventory={isThereInventory} 
+                      statePlaces={statePlaces} 
+                      selectedPlace={selectedPlace} />
           </>
         ) : (
         // Если инвентаря нет в комнате
           <>
             <p>Здесь ничего нет</p>
-            {/* <button type='button' onClick={() => setShowAddInventory(true)}>Добавить</button> */}
             {showAddInventory && (
-              <li>
+              <div>
                 <form onSubmit={(e) => {
                   e.preventDefault();
                   dispatch(addInventoryThunk(selectedPlace, itemName, countNumber, selectedPlace));
@@ -108,7 +107,7 @@ export const Company = () => {
                   <input type='number' value={countNumber} onChange={(e) => setCountNumber(e.target.value)} placeholder='Количество' />
                   <button type='submit'>Добавить</button>
                 </form>
-              </li>
+              </div>
             )}
           </>
         )}

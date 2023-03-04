@@ -6,7 +6,7 @@ export const Places = ({ nodes, handleShowInventory }) => {
   return (
     <ul className={c.places}>
       {nodes.map((node) => (
-        <li key={node.id} onClick={handleShowInventory}>
+        <li className={c.places__item} key={node.id} onClick={handleShowInventory}>
           {node.parts 
           ? <details className={c.places__details} open>
               <summary className={c.places__summary} id={node.id}>

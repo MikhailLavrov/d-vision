@@ -1,3 +1,25 @@
+.places {
+  margin: 0;
+  margin-bottom: 5px;
+  padding: 10px;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  
+  background-color: rgba(0, 0, 0, 0.036);
+  cursor: pointer;
+  list-style: none;
+}
+
+.places__item {
+  margin-bottom: 5px;
+  padding: 10px;
+
+  background-color: rgba(0, 0, 0, 0.036);
+  cursor: pointer;
+}
+
 .places__details {
   padding: 10px;
 }

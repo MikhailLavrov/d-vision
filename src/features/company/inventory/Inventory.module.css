@@ -1,11 +1,40 @@
 .inventory {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.inventory__item {
+  padding: 10px;
+  margin-bottom: 10px;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+
   position: relative;
+
+  background-color: rgba(0, 0, 0, 0.09);
+  border-radius: 10px;
+}
+
+.inventory__item p {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgba(0, 0, 0, 0.451);
+  font-weight: 600;
+}
+
+.inventory__item span {
+  color: brown;
 }
 
 .inventory__delButton {
   padding: 0;
-
+  
   position: absolute;
-  top: 0;
-  right: 0
+  top: 10px;
+  right: 10px;
 }
