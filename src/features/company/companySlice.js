@@ -17,10 +17,11 @@ export const companySlice = createSlice({
       state.inventory = action.payload;
     },
     addInventory: (state, action) => {
+      console.log(action.payload);
       state.inventory.push(action.payload);
     },
     deleteInventory: (state, action) => {
-      state.inventory.filter((item) => item.id !== action.itemId)
+      state.inventory = state.inventory.filter((item) => item.id !== action.payload);
     },
     updateInventory: (state, action) => {
       state.inventory.map(item => {
@@ -66,19 +67,15 @@ export const getInventoryThunk = () => (dispatch) => {
           dispatch(getInventory(docs));
         });
 }
-export const addInventoryThunk = (itemName, countNumber, placeId) => (dispatch) => {
-  return companyAPI.addInventory(itemName, countNumber, placeId)
+export const addInventoryThunk = (id, name, count, placeId) => (dispatch) => {
+  return companyAPI.addInventory(id, name, count, placeId)
         .then(() => {
-          dispatch(addInventory({itemName, countNumber, placeId}))
-          console.info("addInventoryThunk Done")
+          dispatch(addInventory({id, name, count, placeId}))
         });
 }
 export const deleteInventoryThunk = (itemId) => (dispatch) => {
-  return companyAPI.deleteInventory()
-        .then(() => {
-          dispatch(deleteInventory(itemId))
-          console.info("deleteInventoryThunk Done");
-        });
+  return companyAPI.deleteInventory(itemId)
+        .then(() => dispatch(deleteInventory(itemId)));
 }
 export const updateInventoryThunk = (itemId, countNumber) => (dispatch) => {
   return companyAPI.updateInventory(itemId)

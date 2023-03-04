@@ -1,9 +1,19 @@
+import { useDispatch } from 'react-redux';
+import { deleteInventoryThunk } from '../companySlice';
+import c from './Inventory.module.css';
+
 export const Inventory = (props) => {
   const {selectedPlace, statePlaces, isThereInventory} = props;
+  const dispatch = useDispatch();
+
+  const handleDeleteInventory = (itemId) => {
+    dispatch(deleteInventoryThunk(itemId));
+  }
+  
 
   return isThereInventory.map((item) => {
     return (
-      <li key={item.id}>
+      <li className={c.inventory} key={item.id}>
         <p>Название <span>{item.name}</span></p>
         <p>
           Количество{" "}
@@ -11,9 +21,11 @@ export const Inventory = (props) => {
           ? (
             <span>{item.count}</span>
           ) : (
-            <b>
+            <>
               <span id='itemCount'>{item.count}</span>
-            </b>
+              <button className={c.inventory__delButton} 
+                      onClick={() => handleDeleteInventory(item.id)}>&#10060;</button>
+            </>
           )}
         </p>
       </li>
