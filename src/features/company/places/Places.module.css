@@ -1,0 +1,85 @@
+.places__details {
+  padding: 10px;
+}
+
+.places__details[open] > .places__summary {
+  background-color: rgba(30, 0, 255, 0.116);
+}
+
+.places__details[open] > summary::after {
+  transform: rotate(-90deg);
+}
+
+.places__summary {
+  padding: 10px;
+  
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  
+  background-color: rgba(30, 0, 255, 0.066);
+  
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.places__summary::after {
+  position: absolute;
+  content: "←";
+  left: calc(100% - 30px);
+  
+  font-size: 20px;
+  
+  transition: all 0.3s ease-in-out;
+}
+
+.places__placeSummary,
+.places__placeInner {
+  margin: 0;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.places__placeSummary p, /* place name */
+.places__placeInner p {
+  margin: 0;
+}
+
+.places__countBadge {
+  padding: 5px;
+  min-width: 22px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  color: aliceblue;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+  
+  border-radius: 50%;
+}
+
+.places__countBadgeGreen {
+  background-color: rgba(110, 184, 0, 0.8);
+}
+
+.places__countBadgeRed {
+  background-color: rgba(184, 0, 0, 0.8);
+}
+
+.places__totalCountBadge {
+  margin-left: auto !important;
+  margin-right: 30px !important;
+
+  display: flex;
+  gap: 5px;
+}
