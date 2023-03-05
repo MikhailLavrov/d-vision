@@ -15,13 +15,16 @@ export const companyAPI = {
   },
   // Добавление оборудования
   addInventory(itemName, countNumber, placeId) {
-    return getFirestoreCollection("inventory").doc()
-          .set({
-            name: itemName,
-            count: countNumber,
-            place: getFirestoreCollection("places").doc(placeId)
-          })
-  },
+    const inventoryRef = getFirestoreCollection("inventory").doc();
+    const generatedId = inventoryRef.id;
+    console.log('Это в АПИ: ', generatedId, itemName, countNumber, placeId);
+    return inventoryRef.set({
+      id: generatedId,
+      name: itemName,
+      count: countNumber,
+      placeId: placeId
+    }).then(() => generatedId);
+  },  
   // Удаление оборудования
   deleteInventory(itemId) {
     return getFirestoreCollection("inventory").doc(itemId)

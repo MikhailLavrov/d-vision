@@ -32,7 +32,6 @@ export const Company = () => {
   //* ================== Работа с местами ====================
   const headItems = getHeadItems(statePlaces);
   const recursedPlaces = getRecursedPlacesArr(statePlaces, headItems, stateInventory);
-  
   // ================= Company FC RETURN ==================
   return (
     <section className={c.company}>
@@ -54,12 +53,16 @@ export const Company = () => {
             {!statePlaces.find((place) => place.id === selectedPlace).parts 
             ? (
               <>
-                <button className={c.place__addButton} type='button' onClick={() => {setShowAddInventory(true)}} 
-                  style={{display: showAddInventory ? 'none' : 'block'}}>Добавить</button>
+                <button className={c.place__addButton} 
+                        type='button' 
+                        onClick={() => {setShowAddInventory(true)}} 
+                        style={{display: showAddInventory ? 'none' : 'block'}}>
+                        Добавить
+                </button>
                 
                 {/* Открытая форма добавления */}
                 {showAddInventory && (
-                  <div>
+                  <div className={c.place__addFormWrapper}>
                     <form onSubmit={(e) => {
                             e.preventDefault();
                             dispatch(addInventoryThunk( itemName, countNumber, selectedPlace));
@@ -97,12 +100,12 @@ export const Company = () => {
             {showAddInventory && (
               <div>
                 <form onSubmit={(e) => {
-                  e.preventDefault();
-                  dispatch(addInventoryThunk(selectedPlace, itemName, countNumber, selectedPlace));
-                  setShowAddInventory(false);
-                  setItemName('');
-                  setCountNumber('');
-                }}>
+                            e.preventDefault();
+                            dispatch(addInventoryThunk( itemName, countNumber, selectedPlace));
+                            setShowAddInventory(false);
+                            setItemName(itemName);
+                            setCountNumber(countNumber);
+                          }}>
                   <input type='text' value={itemName} onChange={(e) => setItemName(e.target.value)} placeholder='Название' />
                   <input type='number' value={countNumber} onChange={(e) => setCountNumber(e.target.value)} placeholder='Количество' />
                   <button type='submit'>Добавить</button>

@@ -105,3 +105,11 @@
   display: flex;
   gap: 5px;
 }
+
+.places__totalTitle {
+  padding: 0;
+  
+  color: black;
+  font-weight: 400;
+  border-radius: 0%;
+}

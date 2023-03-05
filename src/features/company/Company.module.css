@@ -36,3 +36,25 @@
 .place__addButton:hover {
   box-shadow: 0 0 25px -15px #000000 inset;
 }
+
+.place__addFormWrapper {
+  margin-left: auto;
+}
+
+.place__addFormWrapper form {
+  margin-left: auto;
+  
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+
+.place__addFormWrapper input {
+  padding: 5px;
+}
+
+.place__addFormWrapper button {
+  padding: 5px;
+
+  grid-column: -1/-2;
+}
