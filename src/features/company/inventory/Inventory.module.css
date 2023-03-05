@@ -20,7 +20,8 @@
   border-radius: 10px;
 }
 
-.inventory__item p {
+.inventory__item p,
+.inventory__item span {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   color: rgba(0, 0, 0, 0.451);
@@ -31,10 +32,22 @@
   color: brown;
 }
 
-.inventory__delButton {
+.inventory__buttons {
   padding: 0;
   
   position: absolute;
   top: 10px;
   right: 10px;
+
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.inventory__editButton,
+.inventory__delButton {
+  padding: 5px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
 }
