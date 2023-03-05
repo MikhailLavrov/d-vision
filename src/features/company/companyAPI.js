@@ -19,21 +19,20 @@ export const companyAPI = {
           .set({
             name: itemName,
             count: countNumber,
-            place: getFirestoreCollection("places").doc(placeId) // main-101 – id места
+            place: getFirestoreCollection("places").doc(placeId)
           })
   },
   // Удаление оборудования
   deleteInventory(itemId) {
-    return getFirestoreCollection("inventory")
-          .doc(itemId)
+    return getFirestoreCollection("inventory").doc(itemId)
           .delete()
   },
   // Обновление записи оборудования
-  updateInventory(itemId, countNumber) {
-    return getFirestoreCollection("inventory")
-          .doc(itemId)
+  updateInventory(id, count) {
+    console.log('Привет это Апи ', id, count);
+    return getFirestoreCollection("inventory").doc(id)
           .set({
-            count: countNumber
+            count: count
           })
   },
 }

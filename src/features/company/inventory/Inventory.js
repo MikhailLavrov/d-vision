@@ -7,33 +7,41 @@ export const Inventory = (props) => {
   const { selectedPlace, statePlaces, isThereInventory } = props;
   const dispatch = useDispatch();
   const [editItemId, setEditItemId] = useState(null);
+  const [itemName, setItemName] = useState('');
+  const [countNumber, setCountNumber] = useState('');
 
   const handleDeleteInventory = (itemId) => dispatch(deleteInventoryThunk(itemId));
 
   const handleEditClick = (itemId) => setEditItemId(itemId);
-  
-  const handleUpdateInventory = (itemId, name, count) => {
-    dispatch(updateInventoryThunk({ id: itemId, name, count }));
-    setEditItemId(null);
-  };
+  console.log('isThereInventory: ', isThereInventory);
 
   return (
     <ul className={c.inventory}>
       {isThereInventory.map((item) => (
         <li className={c.inventory__item} key={item.id}>
-          {editItemId === item.id ? (
-            <div className={c.inventory__form}>
+          {editItemId === item.id 
+          ? (
+            <form className={c.inventory__form}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    dispatch(updateInventoryThunk(item.id, countNumber));
+                    handleEditClick(null);
+                    setItemName('');
+                    setCountNumber('');}}>
               <input
                 type="text"
-                value={item.name}
-                onChange={(e) => handleUpdateInventory(item.id, e.target.value, item.count)}
+                value={itemName}
+                onChange={(e) => setItemName(e.target.value)}
+                // onChange={(e) => handleUpdateInventory(item.id, e.target.value, item.count)}
               />
               <input
-                type="text"
-                value={item.count}
-                onChange={(e) => handleUpdateInventory(item.id, item.name, e.target.value)}
+                type="number"
+                value={countNumber}
+                onChange={(e) => setCountNumber(e.target.value)}
+                // onChange={(e) => handleUpdateInventory(item.id, item.name, e.target.value)}
               />
-            </div>
+              <button type='submit'>Сохранить</button>
+            </form>
           ) : (
             <>
               <p>Название <span>{item.name}</span></p>
@@ -49,7 +57,11 @@ export const Inventory = (props) => {
                       <button
                         className={c.inventory__editButton}
                         type="button"
-                        onClick={() => handleEditClick(item.id)}
+                        onClick={() => {
+                          handleEditClick(item.id)
+                          setCountNumber(item.count)
+                          setItemName(item.name)
+                        }}
                       > &#9998;</button>
                       <button
                         className={c.inventory__delButton}

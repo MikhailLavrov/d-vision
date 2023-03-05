@@ -61,8 +61,9 @@ export const Company = () => {
                 {showAddInventory && (
                   <div>
                     <form onSubmit={(e) => {
+                      console.log('Это selectedPlace при добавлении в качестве id: ', selectedPlace);
                             e.preventDefault();
-                            dispatch(addInventoryThunk(selectedPlace, itemName, countNumber, selectedPlace));
+                            dispatch(addInventoryThunk( selectedPlace, itemName, countNumber, selectedPlace));
                             setShowAddInventory(false);
                             setItemName(itemName);
                             setCountNumber(countNumber);
