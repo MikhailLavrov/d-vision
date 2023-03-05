@@ -17,6 +17,7 @@ export const companySlice = createSlice({
       state.inventory = action.payload;
     },
     addInventory: (state, action) => {
+      console.log('При добавлении в редюсер пришел такой payload: ', action.payload);
       state.inventory.unshift(action.payload);
     },
     deleteInventory: (state, action) => {
@@ -73,22 +74,19 @@ export const getInventoryThunk = () => (dispatch) => {
           dispatch(getInventory(docs));
         });
 }
-export const addInventoryThunk = (id, name, count, placeId) => (dispatch) => {
-  return companyAPI.addInventory(id, name, count, placeId)
-        .then(() => {
-          dispatch(addInventory({name, count, placeId}))
-        });
+export const addInventoryThunk = (name, count, placeId) => (dispatch) => {
+  return companyAPI.addInventory( name, count, placeId )
+        .then(() => dispatch(addInventory({ name, count, placeId })));
 }
 export const deleteInventoryThunk = (itemId) => (dispatch) => {
+  console.log('При удалении, itemId: ', itemId);
   return companyAPI.deleteInventory(itemId)
         .then(() => dispatch(deleteInventory(itemId)));
 }
 export const updateInventoryThunk = (id, count) => (dispatch) => {
-  console.log('Санк редактора!',"// id: ",id, "// count: ", count);
+  console.log('При редактировании, itemId: ', id);
   return companyAPI.updateInventory(id, count)
-    .then(() => {
-      dispatch(updateInventory({ id, count }));
-    });
+    .then(() => dispatch(updateInventory({ id, count })));
 };
 
 

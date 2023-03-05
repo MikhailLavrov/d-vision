@@ -7,14 +7,11 @@ export const Inventory = (props) => {
   const { selectedPlace, statePlaces, isThereInventory } = props;
   const dispatch = useDispatch();
   const [editItemId, setEditItemId] = useState(null);
-  const [itemName, setItemName] = useState('');
+  // const [itemName, setItemName] = useState('');
   const [countNumber, setCountNumber] = useState('');
 
   const handleDeleteInventory = (itemId) => dispatch(deleteInventoryThunk(itemId));
-
-  const handleEditClick = (itemId) => setEditItemId(itemId);
   console.log('isThereInventory: ', isThereInventory);
-
   return (
     <ul className={c.inventory}>
       {isThereInventory.map((item) => (
@@ -25,19 +22,23 @@ export const Inventory = (props) => {
                   onSubmit={(e) => {
                     e.preventDefault();
                     dispatch(updateInventoryThunk(item.id, countNumber));
-                    handleEditClick(null);
-                    setItemName('');
+                    setEditItemId(null);
+                    // setItemName('');
                     setCountNumber('');}}>
-              <input
+              {/* <input
                 type="text"
                 value={itemName}
                 onChange={(e) => setItemName(e.target.value)}
                 // onChange={(e) => handleUpdateInventory(item.id, e.target.value, item.count)}
-              />
+              /> */}
+              <p>Название <span>{item.name}</span></p>
               <input
                 type="number"
                 value={countNumber}
-                onChange={(e) => setCountNumber(e.target.value)}
+                onChange={(e) => {
+                  setCountNumber(e.target.value)
+                  dispatch(updateInventoryThunk(item.id, countNumber));
+                }}
                 // onChange={(e) => handleUpdateInventory(item.id, item.name, e.target.value)}
               />
               <button type='submit'>Сохранить</button>
@@ -58,9 +59,9 @@ export const Inventory = (props) => {
                         className={c.inventory__editButton}
                         type="button"
                         onClick={() => {
-                          handleEditClick(item.id)
+                          setEditItemId(item.id)
                           setCountNumber(item.count)
-                          setItemName(item.name)
+                          // setItemName(item.name)
                         }}
                       > &#9998;</button>
                       <button
