@@ -124,3 +124,11 @@
   border-radius: 0%;
   text-align: right;
 }
+
+@media (max-width: 768px) {
+  .places__totalTitle {
+    font-size: 12px;
+    word-break: normal;
+  }
+}
+

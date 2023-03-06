@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import c from './Company.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPlacesThunk, getInventoryThunk, addInventoryThunk } from '../../redux/company/companySlice';
@@ -23,13 +23,14 @@ export const Company = () => {
   const [itemName, setItemName] = useState('');
   const [countNumber, setCountNumber] = useState('');
 
-  const handleShowInventory = (e) => {
+  const handleShowInventory = (e, inventoryRef) => {
     if (e.target.closest('#addForm') || e.target.id === 'addFormBtn') return;
-      setShowAddInventory(false);
-      setItemName('');
-      setCountNumber('');
+    setShowAddInventory(false);
+    setItemName('');
+    setCountNumber('');
     e.stopPropagation();
     setSelectedPlaceId(e.target.id);
+    inventoryRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   // Клик на добавить
@@ -48,6 +49,8 @@ export const Company = () => {
   const headItems = getHeadItems(statePlaces);
   const recursedPlaces = getRecursedPlacesArr(statePlaces, headItems, stateInventory);
 
+  const inventoryRef = useRef(null);
+
   // ================= Company FC RETURN =====================
   return (
     <section className={`${c.company}`}>
@@ -56,10 +59,10 @@ export const Company = () => {
       <div className={c.company__placesWrapper}>
         <h2>Компания</h2>
         <Places nodes={recursedPlaces}
-                handleShowInventory={handleShowInventory} />
+                handleShowInventory={(e) => handleShowInventory(e, inventoryRef)} />
       </div>
       {/* Инвентарь */}
-      <div className={c.company__inventoryWrapper}>
+      <div className={c.company__inventoryWrapper} ref={inventoryRef}>
 
       {/* Если выбрали место */}
       {selectedPlace ? 
