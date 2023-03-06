@@ -10,11 +10,11 @@ export const Inventory = (props) => {
   const [editItemId, setEditItemId] = useState(null);
   const [count, setCount] = useState('');
 
-  console.log('isThereInventory: ', isThereInventory);
   return (
     <ul className={c.inventory}>
       {isThereInventory.map((item) => (
-        <li className={c.inventory__item} key={item.id}>
+        <li className={c.inventory__item} 
+            key={item.id}>
           {editItemId === item.id 
           ? (
             <form className={c.inventory__form}
@@ -26,10 +26,7 @@ export const Inventory = (props) => {
               <input
                 type="number"
                 value={count}
-                onChange={(e) => {
-                  setCount(e.target.value)
-                  dispatch(updateInventoryThunk(item.id, count));
-                }}
+                onChange={(e) => setCount(e.target.value)}
               />
               <button type='submit'>Сохранить</button>
             </form>

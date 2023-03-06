@@ -17,23 +17,20 @@ export const companySlice = createSlice({
       state.inventory = action.payload;
     },
     addInventory: (state, action) => {
-      console.log('Это в экшене: ', action.payload);
       state.inventory.unshift(action.payload);
     },
     deleteInventory: (state, action) => {
       state.inventory = state.inventory.filter((item) => item.id !== action.payload);
-      console.log('При удалении, в редюсере action.payload: ', action.payload);
-      console.log('При удалении, в редюсере state.inventory: ', state.inventory);
     },
     updateInventory: (state, action) => {
-      console.log('Редюсер редактор!', action.payload);
       state.inventory = state.inventory.map((item) => {
         if (item.id === action.payload.id) {
-          console.log('Совпало item.id === action.id в редюсере: ', action.payload.id);
           return {
-            ...item,
-            count: action.payload.count
-          };
+            id: item.id, 
+            name: item.name, 
+            count: action.payload.count, 
+            placeId: item.placeId,
+          }
         } else {
           return item;
         }
@@ -50,7 +47,6 @@ export const getPlacesThunk = () => (dispatch) => {
         .then(response => {
           let docs = response.docs.map(x => {
             const data = x.data()
-            // console.log('x.data(): ', x.data());
             return {
               id: x.id,
               name: data.name,
@@ -65,7 +61,6 @@ export const getInventoryThunk = () => (dispatch) => {
         .then(response => {
           let docs = response.docs.map(x => {
             const data = x.data()
-            console.log('x.data(): ', x.data());
             return {
               id: x.id,
               name: data.name,
@@ -73,14 +68,9 @@ export const getInventoryThunk = () => (dispatch) => {
               placeId: data?.place?.id ?? data.placeId
             }
           });
-          console.log(docs);
           dispatch(getInventory(docs));
         });
-}
-// export const addInventoryThunk = ( name, count, placeId) => (dispatch) => {
-//   return companyAPI.addInventory( name, count, placeId )
-//         .then(() => dispatch(addInventory({ name, count, placeId })));
-// }
+};
 export const addInventoryThunk = (name, count, placeId) => (dispatch) => {
   return companyAPI.addInventory(name, count, placeId)
     .then((generatedId) => {
@@ -91,18 +81,17 @@ export const addInventoryThunk = (name, count, placeId) => (dispatch) => {
         placeId: placeId
       };
       dispatch(addInventory(newItem));
-      console.log('Это в санке: ', newItem);
     });
 };
 export const deleteInventoryThunk = (itemId) => (dispatch) => {
-  console.log('При удалении, в санке itemId: ', itemId);
   return companyAPI.deleteInventory(itemId)
         .then(() => dispatch(deleteInventory(itemId)));
 }
 export const updateInventoryThunk = (id, count) => (dispatch) => {
-  console.log('При редактировании, itemId: ', id);
   return companyAPI.updateInventory(id, count)
-    .then(() => dispatch(updateInventory({ id, count })));
+    .then(() => {
+      dispatch(updateInventory({id: id, count: count}));
+    });
 };
 
 

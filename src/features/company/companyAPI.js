@@ -17,7 +17,6 @@ export const companyAPI = {
   addInventory(itemName, countNumber, placeId) {
     const inventoryRef = getFirestoreCollection("inventory").doc();
     const generatedId = inventoryRef.id;
-    console.log('Это в АПИ: ', generatedId, itemName, countNumber, placeId);
     return inventoryRef.set({
       id: generatedId,
       name: itemName,
@@ -32,10 +31,8 @@ export const companyAPI = {
   },
   // Обновление записи оборудования
   updateInventory(id, count) {
-    console.log('Апи редактирования ', 'id: ' ,id, 'count' ,count);
-    return getFirestoreCollection("inventory").doc(id)
-          .set({
-            count: count
-          })
+    return getFirestoreCollection("inventory").doc(id).update({
+      count: count
+    });
   },
 }

@@ -8,6 +8,7 @@ import { Places } from './places/Places';
 
 export const Company = () => {
   const dispatch = useDispatch();
+  //* =================== Инициализация =====================
   const statePlaces = useSelector((state) => state.company.places) || [];
   const stateInventory = useSelector((state) => state.company.inventory) || [];
   useEffect(() => {
@@ -18,27 +19,26 @@ export const Company = () => {
   //* ================= Работа с инвентарем ==================
   const [selectedPlace, setSelectedPlaceId] = useState(null);
   const isThereInventory = stateInventory.filter((item) => item.placeId === selectedPlace);
+  const [showAddInventory, setShowAddInventory] = useState(false);
+  const [itemName, setItemName] = useState('');
+  const [countNumber, setCountNumber] = useState('');
   const handleShowInventory = (e) => {
     e.stopPropagation();
     setSelectedPlaceId(e.target.id);
   };
 
-  // TODO Добавление инвентаря
-  const [showAddInventory, setShowAddInventory] = useState(false);
-  const [itemName, setItemName] = useState('');
-  const [countNumber, setCountNumber] = useState('');
-  // TODO ====================
-
   //* ================== Работа с местами ====================
   const headItems = getHeadItems(statePlaces);
   const recursedPlaces = getRecursedPlacesArr(statePlaces, headItems, stateInventory);
-  // ================= Company FC RETURN ==================
+
+  // ================= Company FC RETURN =====================
   return (
     <section className={c.company}>
       {/* Места */}
       <div className={c.company__placesWrapper}>
         <h2>Компания</h2>
-        <Places nodes={recursedPlaces} handleShowInventory={handleShowInventory} />
+        <Places nodes={recursedPlaces} 
+                handleShowInventory={handleShowInventory} />
       </div>
       {/* Инвентарь */}
       <div className={c.company__inventoryWrapper}>
@@ -55,7 +55,7 @@ export const Company = () => {
               <>
                 <button className={c.place__addButton} 
                         type='button' 
-                        onClick={() => {setShowAddInventory(true)}} 
+                        onClick={() => setShowAddInventory(true)}
                         style={{display: showAddInventory ? 'none' : 'block'}}>
                         Добавить
                 </button>
@@ -88,10 +88,11 @@ export const Company = () => {
         
         {isThereInventory.length > 0
         ? (
+          // Если инвентарь есть в комнате
           <>
             <Inventory isThereInventory={isThereInventory} 
-                      statePlaces={statePlaces} 
-                      selectedPlace={selectedPlace} />
+                       statePlaces={statePlaces} 
+                       selectedPlace={selectedPlace} />
           </>
         ) : (
         // Если инвентаря нет в комнате
@@ -106,8 +107,14 @@ export const Company = () => {
                             setItemName(itemName);
                             setCountNumber(countNumber);
                           }}>
-                  <input type='text' value={itemName} onChange={(e) => setItemName(e.target.value)} placeholder='Название' />
-                  <input type='number' value={countNumber} onChange={(e) => setCountNumber(e.target.value)} placeholder='Количество' />
+                  <input type='text' 
+                         value={itemName} 
+                         onChange={(e) => setItemName(e.target.value)} 
+                         placeholder='Название' />
+                  <input type='number' 
+                         value={countNumber} 
+                         onChange={(e) => setCountNumber(e.target.value)} 
+                         placeholder='Количество' />
                   <button type='submit'>Добавить</button>
                 </form>
               </div>
