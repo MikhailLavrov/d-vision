@@ -1,14 +1,11 @@
 .places {
   margin: 0;
-  margin-bottom: 5px;
   padding: 10px;
   
   display: flex;
   flex-direction: column;
   gap: 10px;
   
-  background-color: rgba(0, 0, 0, 0.036);
-  cursor: pointer;
   list-style: none;
 }
 
@@ -16,8 +13,14 @@
   margin-bottom: 5px;
   padding: 10px;
 
-  background-color: rgba(0, 0, 0, 0.036);
+  background-color: rgba(255, 254, 254, 0.356);
+  box-shadow: 0px 10px 22px -17px #000000;
   cursor: pointer;
+  transition: all 0.2s linear;
+}
+
+.places__item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .places__details {
@@ -25,7 +28,7 @@
 }
 
 .places__details[open] > .places__summary {
-  background-color: rgba(30, 0, 255, 0.116);
+  background-color: rgba(70, 49, 228, 0.118);
 }
 
 .places__details[open] > summary::after {
@@ -40,7 +43,7 @@
   display: flex;
   align-items: center;
   
-  background-color: rgba(30, 0, 255, 0.066);
+  background-color: rgba(0, 42, 255, 0.075);
   
   position: relative;
   transition: all 0.3s ease-in-out;
@@ -81,7 +84,7 @@
   align-items: center;
   text-align: center;
 
-  color: aliceblue;
+  color: white;
   font-size: 12px;
   line-height: 1;
   font-weight: 600;
@@ -110,6 +113,8 @@
   padding: 0;
   
   color: black;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   font-weight: 400;
+  font-size: 16px;
   border-radius: 0%;
 }

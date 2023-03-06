@@ -16,8 +16,13 @@
 
   position: relative;
 
-  background-color: rgba(0, 0, 0, 0.09);
-  border-radius: 10px;
+  background-color: rgba(255, 254, 254, 0.356);
+  box-shadow: 0 5px 10px -5px #000000;
+  transition: all 0.2s linear;
+}
+
+.inventory__item:hover {
+  background-color: rgba(255, 255, 255, 0.704);
 }
 
 .inventory__item p,
@@ -50,4 +55,19 @@
   font-size: 16px;
   line-height: 1;
   cursor: pointer;
+
+  transition: all 0.2s ease-in-out;
+}
+
+.inventory__form p {
+  margin-bottom: 5px;
+}
+
+.inventory__form input {
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.inventory__form button {
+  padding: 10px;
 }

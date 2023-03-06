@@ -1,24 +1,28 @@
 .company {
+  min-height: 100vh;
+
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 50px;
+  gap: 20px;
 }
 
-.company__header {
+.company__inventoryHeader {
   margin-bottom: 20px;
 
-  display: flex;
-  align-items: center;
+  display: grid;
+  align-items: start;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
 }
 
-.company__header h2 {
+.company__inventoryHeader h2 {
   margin: 0;
 }
 
 .company__placesWrapper,
 .company__inventoryWrapper {
   padding: 20px;
-  background-color: rgba(187, 127, 255, 0.074);
+  background: linear-gradient(190deg, rgba(28, 1, 134, 0.1) 0%, rgba(250,250,250,0.1) 100%);
 }
 
 .place__addButton {
@@ -26,15 +30,8 @@
   margin-left: auto;
 
   cursor: pointer;
-  border-radius: 10px;
-  border: none;
 
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 0 20px -15px #000000 inset;
-}
-
-.place__addButton:hover {
-  box-shadow: 0 0 25px -15px #000000 inset;
 }
 
 .place__addFormWrapper {
@@ -44,8 +41,8 @@
 .place__addFormWrapper form {
   margin-left: auto;
   
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 5px;
 }
 
@@ -56,5 +53,5 @@
 .place__addFormWrapper button {
   padding: 5px;
 
-  grid-column: -1/-2;
+  cursor: pointer;
 }

@@ -1,21 +1,17 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { store } from './app/store';
+import { store } from './redux/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import { firebaseConfig } from './firebase/firebase-config';
-// import { companyAPI } from './features/company/companyAPI';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
 
 // eslint-disable-next-line no-undef
 firebase.initializeApp(firebaseConfig);
-
-// companyAPI.getPlaces();
-// companyAPI.getInventory();
 
 root.render(
   <React.StrictMode>
@@ -29,5 +25,3 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-
-window.store = store

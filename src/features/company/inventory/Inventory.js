@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteInventoryThunk, updateInventoryThunk } from '../companySlice';
+import { deleteInventoryThunk, updateInventoryThunk } from '../../../redux/company/companySlice';
 import c from './Inventory.module.css';
 
 export const Inventory = ({ selectedPlace, statePlaces, isThereInventory }) => {
@@ -37,10 +37,12 @@ export const Inventory = ({ selectedPlace, statePlaces, isThereInventory }) => {
                   handleUpdateInventory(item);
                 }}
               >
-                <p>
-                  Название <span>{item.name}</span>
-                </p>
-                <input type="number" value={count} onChange={(e) => setCount(e.target.value)} />
+                <div>
+                  <p>
+                    Название <span>{item.name}</span>
+                  </p>
+                  <input type="number" value={count} onChange={(e) => setCount(e.target.value)} />
+                </div>
                 <button type="submit">Сохранить</button>
               </form>
             ) : (

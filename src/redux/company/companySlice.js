@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { companyAPI } from './companyAPI';
+import { companyAPI } from '../../api/companyAPI';
 
 const initialState = {
   places: [],

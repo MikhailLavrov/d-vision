@@ -4,9 +4,11 @@ import { Company } from './features/company/Company';
 
 function App() {
   return (
-    <div className="App">
-      <Company />
-    </div>
+      <div className="App">
+        <div className="container">
+          <Company />
+        </div>
+      </div>
   );
 }
 

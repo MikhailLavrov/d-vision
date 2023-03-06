@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import c from './Company.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPlacesThunk, getInventoryThunk, addInventoryThunk } from './companySlice';
+import { getPlacesThunk, getInventoryThunk, addInventoryThunk } from '../../redux/company/companySlice';
 import { getHeadItems, getRecursedPlacesArr } from './companyUtils';
 import { Inventory } from './inventory/Inventory';
 import { Places } from './places/Places';
@@ -22,10 +22,27 @@ export const Company = () => {
   const [showAddInventory, setShowAddInventory] = useState(false);
   const [itemName, setItemName] = useState('');
   const [countNumber, setCountNumber] = useState('');
+
   const handleShowInventory = (e) => {
+    if (e.target.closest('#addForm') || e.target.id === 'addFormBtn') return;
+      setShowAddInventory(false);
+      setItemName('');
+      setCountNumber('');
     e.stopPropagation();
     setSelectedPlaceId(e.target.id);
   };
+
+  // Клик на добавить
+  const handleRunAddForm = () => {
+    const clickListener = (e) => {
+      if (e.target.closest('#addForm') || e.target.id === 'addFormBtn') return;
+      setShowAddInventory(false);
+      setItemName('');
+      setCountNumber('');
+      document.removeEventListener('click', clickListener);
+    };
+    document.addEventListener('click', clickListener);
+  }
 
   //* ================== Работа с местами ====================
   const headItems = getHeadItems(statePlaces);
@@ -33,11 +50,12 @@ export const Company = () => {
 
   // ================= Company FC RETURN =====================
   return (
-    <section className={c.company}>
+    <section className={`${c.company}`}>
+      <h1 className='visually-hidden'>Структура и инвентарь компании</h1>
       {/* Места */}
       <div className={c.company__placesWrapper}>
         <h2>Компания</h2>
-        <Places nodes={recursedPlaces} 
+        <Places nodes={recursedPlaces}
                 handleShowInventory={handleShowInventory} />
       </div>
       {/* Инвентарь */}
@@ -46,7 +64,7 @@ export const Company = () => {
       {/* Если выбрали место */}
       {selectedPlace ? 
       <>
-        <div className={c.company__header}>
+        <div className={c.company__inventoryHeader}>
           <h2>Инвентарь в {statePlaces.find((place) => place.id === selectedPlace).name}</h2>
           
             {/* Для тех у кого нет дочерних добавляем кнопку ДОБАВИТЬ */}
@@ -55,30 +73,45 @@ export const Company = () => {
               <>
                 <button className={c.place__addButton} 
                         type='button' 
-                        onClick={() => setShowAddInventory(true)}
-                        style={{display: showAddInventory ? 'none' : 'block'}}>
+                        onClick={() => {
+                          handleRunAddForm();
+                          setShowAddInventory(true);
+                        }}
+                        style={{display: showAddInventory ? 'none' : 'block'}}
+                        id='addFormBtn'>
                         Добавить
                 </button>
                 
                 {/* Открытая форма добавления */}
                 {showAddInventory && (
                   <div className={c.place__addFormWrapper}>
-                    <form onSubmit={(e) => {
+                    <form id='addForm' onSubmit={(e) => {
                             e.preventDefault();
                             dispatch(addInventoryThunk( itemName, countNumber, selectedPlace));
                             setShowAddInventory(false);
-                            setItemName(itemName);
-                            setCountNumber(countNumber);
-                          }}>
+                            setItemName('');
+                            setCountNumber('');
+                          }}
+                          >
                       <input type='text' 
+                              id='addFormNameInput'
                               value={itemName} 
+                              required
                               onChange={(e) => setItemName(e.target.value)} 
                               placeholder='Название' />
                       <input type='number' 
-                              value={countNumber} 
+                              value={countNumber}
+                              required
+                              pattern="\d+" 
                               onChange={(e) => setCountNumber(e.target.value)} 
                               placeholder='Количество' />
                       <button type='submit'>Добавить</button>
+                      <button className={c.place__closeButton} 
+                              type='button' 
+                              onClick={() => setShowAddInventory(false)}
+                              style={{display: showAddInventory ? 'block' : 'none'}}>
+                        Закрыть
+                      </button>
                     </form>
                   </div>
                 )}
@@ -98,27 +131,6 @@ export const Company = () => {
         // Если инвентаря нет в комнате
           <>
             <p>Здесь ничего нет</p>
-            {showAddInventory && (
-              <div>
-                <form onSubmit={(e) => {
-                            e.preventDefault();
-                            dispatch(addInventoryThunk( itemName, countNumber, selectedPlace));
-                            setShowAddInventory(false);
-                            setItemName(itemName);
-                            setCountNumber(countNumber);
-                          }}>
-                  <input type='text' 
-                         value={itemName} 
-                         onChange={(e) => setItemName(e.target.value)} 
-                         placeholder='Название' />
-                  <input type='number' 
-                         value={countNumber} 
-                         onChange={(e) => setCountNumber(e.target.value)} 
-                         placeholder='Количество' />
-                  <button type='submit'>Добавить</button>
-                </form>
-              </div>
-            )}
           </>
         )}
       </>
