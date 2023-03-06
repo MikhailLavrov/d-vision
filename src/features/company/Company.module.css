@@ -55,3 +55,20 @@
 
   cursor: pointer;
 }
+
+@media (max-width: 1024px) {
+  .company {
+    display: block;
+  }
+}
+@media (max-width: 768px) {
+  .company__placesWrapper {
+    padding: 0;
+    margin-bottom: 40px;
+  }
+  .company__placesWrapper h2 {
+    padding: 5px;
+    text-align: center;
+    margin: 0;
+  }
+}

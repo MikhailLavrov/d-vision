@@ -51,3 +51,11 @@ code {
   flex-direction: column;
   justify-content: center;
 }
+
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0;
+  }
+}
+
