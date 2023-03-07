@@ -28,7 +28,7 @@ export const companySlice = createSlice({
         if (item.id === action.payload.id) {
           return {
             id: item.id, 
-            name: item.name, 
+            name: action.payload.name, 
             count: action.payload.count, 
             placeId: item.placeId,
           }
@@ -92,10 +92,10 @@ export const deleteInventoryThunk = (itemId) => (dispatch) => {
   return companyAPI.deleteInventory(itemId)
         .then(() => dispatch(deleteInventory(itemId)));
 }
-export const updateInventoryThunk = (id, count) => (dispatch) => {
-  return companyAPI.updateInventory(id, count)
+export const updateInventoryThunk = (id, count, name) => (dispatch) => {
+  return companyAPI.updateInventory(id, count, name)
     .then(() => {
-      dispatch(updateInventory({id: id, count: count}));
+      dispatch(updateInventory({id: id, count: count, name: name}));
     });
 };
 

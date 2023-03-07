@@ -30,9 +30,10 @@ export const companyAPI = {
           .delete()
   },
   // Обновление записи оборудования
-  updateInventory(id, count) {
+  updateInventory(id, count, name) {
     return getFirestoreCollection("inventory").doc(id).update({
-      count: count
+      count: count,
+      name: name,
     });
   },
 }

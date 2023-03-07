@@ -7,19 +7,21 @@ export const Inventory = ({ selectedPlace, statePlaces, isThereInventory }) => {
   const dispatch = useDispatch();
   const [editItemId, setEditItemId] = useState(null);
   const [count, setCount] = useState('');
+  const [name, setName] = useState('');
 
   const handleEditItem = useCallback(
     (item) => {
       setEditItemId(item.id);
       setCount(item.count);
+      setName(item.name);
     }, []
   );
   
   const handleUpdateInventory = useCallback(
     (item) => {
-      dispatch(updateInventoryThunk(item.id, count));
+      dispatch(updateInventoryThunk(item.id, count, name));
       setEditItemId(null);
-    }, [count, dispatch]
+    }, [count, name, dispatch]
   );
 
   const inventoryItems = useMemo(
@@ -37,11 +39,13 @@ export const Inventory = ({ selectedPlace, statePlaces, isThereInventory }) => {
                   handleUpdateInventory(item);
                 }}
               >
-                <div>
-                  <p>
-                    Название <span>{item.name}</span>
-                  </p>
-                  <input type="number" value={count} onChange={(e) => setCount(e.target.value)} />
+                <div className={c.inventory__formEditWrapper}>
+                  <input type="text" 
+                         value={name} 
+                         onChange={(e) => setName(e.target.value)} />
+                  <input type="number" 
+                         value={count} 
+                         onChange={(e) => setCount(e.target.value)} />
                 </div>
                 <button type="submit">Сохранить</button>
               </form>
@@ -56,7 +60,7 @@ export const Inventory = ({ selectedPlace, statePlaces, isThereInventory }) => {
                     <span>{item.count}</span>
                   ) : (
                     <>
-                      <span id="itemCount">{item.count}</span>
+                      <span>{item.count}</span>
                       <p className={c.inventory__buttons}>
                         <button
                           className={c.inventory__editButton}
@@ -82,7 +86,7 @@ export const Inventory = ({ selectedPlace, statePlaces, isThereInventory }) => {
           </li>
         );
       }),
-    [count, dispatch, editItemId, handleEditItem, handleUpdateInventory, isThereInventory, selectedPlace, statePlaces]
+    [count, name, dispatch, editItemId, handleEditItem, handleUpdateInventory, isThereInventory, selectedPlace, statePlaces]
   );
 
   return <ul className={c.inventory}>{inventoryItems}</ul>;

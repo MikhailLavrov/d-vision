@@ -60,15 +60,26 @@
   transition: all 0.2s ease-in-out;
 }
 
+.inventory__form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .inventory__form p {
   margin-bottom: 5px;
 }
 
 .inventory__form input {
   padding: 5px;
-  margin-bottom: 10px;
 }
 
 .inventory__form button {
   padding: 10px;
+}
+
+.inventory__formEditWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
