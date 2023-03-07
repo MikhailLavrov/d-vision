@@ -4,6 +4,7 @@ import { companyAPI } from '../../api/companyAPI';
 const initialState = {
   places: [],
   inventory: [],
+  isFetching: false,
 };
 
 export const companySlice = createSlice({
@@ -36,13 +37,16 @@ export const companySlice = createSlice({
         }
       });
     },
-    
+    setIsFetching: (state, action) => {
+      state.isFetching = action.payload;
+    },
   },
 }); 
 
-export const { getPlaces, getInventory, addInventory, deleteInventory, updateInventory } = companySlice.actions;
+export const { getPlaces, getInventory, addInventory, deleteInventory, updateInventory, setIsFetching } = companySlice.actions;
 
 export const getPlacesThunk = () => (dispatch) => {
+  dispatch(setIsFetching(true));
   return companyAPI.getPlaces()
         .then(response => {
           let docs = response.docs.map(x => {
@@ -54,6 +58,7 @@ export const getPlacesThunk = () => (dispatch) => {
             }
           });
           dispatch(getPlaces(docs));
+          dispatch(setIsFetching(false));
         })
 }
 export const getInventoryThunk = () => (dispatch) => {

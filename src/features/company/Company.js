@@ -5,12 +5,14 @@ import { getPlacesThunk, getInventoryThunk, addInventoryThunk } from '../../redu
 import { getHeadItems, getRecursedPlacesArr } from './companyUtils';
 import { Inventory } from './inventory/Inventory';
 import { Places } from './places/Places';
+import { Loader } from '../common/Loader';
 
 export const Company = () => {
   const dispatch = useDispatch();
   //* =================== Инициализация =====================
   const statePlaces = useSelector((state) => state.company.places) || [];
   const stateInventory = useSelector((state) => state.company.inventory) || [];
+  const isFetching = useSelector((state) => state.company.isFetching);
   useEffect(() => {
     dispatch(getPlacesThunk());
     dispatch(getInventoryThunk());
@@ -18,10 +20,10 @@ export const Company = () => {
 
   //* ================= Работа с инвентарем ==================
   const [selectedPlace, setSelectedPlaceId] = useState(null);
-  const isThereInventory = stateInventory.filter((item) => item.placeId === selectedPlace);
   const [showAddInventory, setShowAddInventory] = useState(false);
   const [itemName, setItemName] = useState('');
   const [countNumber, setCountNumber] = useState('');
+  const isThereInventory = stateInventory.filter((item) => item.placeId === selectedPlace);
 
   const handleShowInventory = (e, inventoryRef) => {
     if (e.target.closest('#addForm') || e.target.id === 'addFormBtn') return;
@@ -53,6 +55,7 @@ export const Company = () => {
 
   // ================= Company FC RETURN =====================
   return (
+    isFetching ? <Loader /> :
     <section className={`${c.company}`}>
       <h1 className='visually-hidden'>Структура и инвентарь компании</h1>
       {/* Места */}

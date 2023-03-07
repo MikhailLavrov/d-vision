@@ -1,0 +1,20 @@
+.loader {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  
+  width: 100vw;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(190deg, rgba(28, 1, 134, 0.1) 0%, rgba(250,250,250,0.1) 100%);
+}
+
+.loader img {
+  z-index: 999;
+}
