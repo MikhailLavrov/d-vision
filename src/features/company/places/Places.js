@@ -32,7 +32,9 @@ export const Places = ({ nodes, handleShowInventory }) => {
               <span className={`${c.places__countBadge} ${node.localInventCount === 0 ? c.places__countBadgeRed : c.places__countBadgeGreen}`}>
                 {node.localInventCount}
               </span>
-              <p id={node.id}>{node.name}</p>
+              <p id={node.id}>
+                {node.name}
+              </p>
             </div>
           }
         </li>

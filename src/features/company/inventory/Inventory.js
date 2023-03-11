@@ -31,7 +31,8 @@ export const Inventory = ({ selectedPlace, statePlaces, isThereInventory }) => {
 
         return (
           <li className={c.inventory__item} key={item.id}>
-            {editItemId === item.id ? (
+            {editItemId === item.id 
+            ? (
               <form
                 className={c.inventory__form}
                 onSubmit={(e) => {
@@ -51,12 +52,10 @@ export const Inventory = ({ selectedPlace, statePlaces, isThereInventory }) => {
               </form>
             ) : (
               <>
-                <p>
-                  Название <span>{item.name}</span>
-                </p>
-                <div>
-                  Количество{" "}
-                  {selectedPlaceParts ? (
+                <p>Название <span>{item.name}</span></p>
+                <div>Количество{" "}
+                  {selectedPlaceParts 
+                  ? (
                     <span>{item.count}</span>
                   ) : (
                     <>
@@ -66,16 +65,15 @@ export const Inventory = ({ selectedPlace, statePlaces, isThereInventory }) => {
                           className={c.inventory__editButton}
                           type="button"
                           onClick={() => handleEditItem(item)}
-                        >
-                          {" "}
+                          aria-label="Редактировать элемент">
                           &#9998;
                         </button>
                         <button
                           className={c.inventory__delButton}
                           type="button"
                           onClick={() => dispatch(deleteInventoryThunk(item.id))}
-                        >
-                          &#10006;
+                          aria-label="Удалить элемент">
+                          &#10006; 
                         </button>
                       </p>
                     </>

@@ -3,9 +3,7 @@ export const getHeadItems = (places) => {
   const parts = [];
 
   places.forEach(place => {
-    if (place.parts) {
-      return place.parts.forEach(part => parts.push(part))
-    }
+    place.parts && place.parts.forEach(part => parts.push(part))
   });
 
   places.forEach(place => ids.push(place.id));

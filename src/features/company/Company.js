@@ -37,6 +37,7 @@ export const Company = () => {
 
   // Клик на добавить
   const handleRunAddForm = () => {
+    setShowAddInventory(true);
     const clickListener = (e) => {
       if (e.target.closest('#addForm') || e.target.id === 'addFormBtn') return;
       setShowAddInventory(false);
@@ -45,6 +46,15 @@ export const Company = () => {
       document.removeEventListener('click', clickListener);
     };
     document.addEventListener('click', clickListener);
+  }
+
+  // Сабмит формы добавления
+  const handleAddFormSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addInventoryThunk( itemName, countNumber, selectedPlace));
+    setShowAddInventory(false);
+    setItemName('');
+    setCountNumber('');
   }
 
   //* ================== Работа с местами ====================
@@ -56,7 +66,7 @@ export const Company = () => {
   // ================= Company FC RETURN =====================
   return (
     isFetching ? <Loader /> :
-    <section className={`${c.company}`}>
+    <section className={c.company}>
       <h1 className='visually-hidden'>Структура и инвентарь компании</h1>
       {/* Места */}
       <div className={c.company__placesWrapper}>
@@ -67,82 +77,65 @@ export const Company = () => {
       {/* Инвентарь */}
       <div className={c.company__inventoryWrapper} ref={inventoryRef}>
 
-      {/* Если выбрали место */}
-      {selectedPlace ? 
-      <>
-        <div className={c.company__inventoryHeader}>
-          <h2>Инвентарь в {statePlaces.find((place) => place.id === selectedPlace).name}</h2>
+        {/* Если выбрали место */}
+        {selectedPlace
+        ? ( 
+        <>
+          <div className={c.company__inventoryHeader}>
+            <h2>Инвентарь в {statePlaces.find((place) => place.id === selectedPlace).name}</h2>
+            
+              {/* Для тех у кого нет дочерних добавляем кнопку ДОБАВИТЬ */}
+              {!statePlaces.find((place) => place.id === selectedPlace).parts && (
+                <>
+                  <button className={c.place__addButton} 
+                          id='addFormBtn'
+                          onClick={handleRunAddForm}
+                          style={{display: showAddInventory ? 'none' : 'block'}}
+                          type='button'>
+                          Добавить
+                  </button>
+                  
+                  {/* Открытая форма добавления */}
+                  {showAddInventory && (
+                    <div className={c.place__addFormWrapper}>
+                      <form id='addForm' 
+                            onSubmit={handleAddFormSubmit}>
+                        <input type='text' 
+                                id='addFormNameInput'
+                                value={itemName} 
+                                required
+                                onChange={(e) => setItemName(e.target.value)} 
+                                placeholder='Название' />
+                        <input type='number' 
+                                value={countNumber}
+                                required
+                                pattern="\d+" 
+                                onChange={(e) => setCountNumber(e.target.value)} 
+                                placeholder='Количество' />
+                        <button type='submit'>Добавить</button>
+                        <button className={c.place__closeButton} 
+                                type='button' 
+                                onClick={() => setShowAddInventory(false)}
+                                style={{display: showAddInventory ? 'block' : 'none'}}>
+                                Закрыть
+                        </button>
+                      </form>
+                    </div>
+                  )}
+                </>
+              )}
+          </div>
           
-            {/* Для тех у кого нет дочерних добавляем кнопку ДОБАВИТЬ */}
-            {!statePlaces.find((place) => place.id === selectedPlace).parts 
-            ? (
-              <>
-                <button className={c.place__addButton} 
-                        type='button' 
-                        onClick={() => {
-                          handleRunAddForm();
-                          setShowAddInventory(true);
-                        }}
-                        style={{display: showAddInventory ? 'none' : 'block'}}
-                        id='addFormBtn'>
-                        Добавить
-                </button>
-                
-                {/* Открытая форма добавления */}
-                {showAddInventory && (
-                  <div className={c.place__addFormWrapper}>
-                    <form id='addForm' onSubmit={(e) => {
-                            e.preventDefault();
-                            dispatch(addInventoryThunk( itemName, countNumber, selectedPlace));
-                            setShowAddInventory(false);
-                            setItemName('');
-                            setCountNumber('');
-                          }}
-                          >
-                      <input type='text' 
-                              id='addFormNameInput'
-                              value={itemName} 
-                              required
-                              onChange={(e) => setItemName(e.target.value)} 
-                              placeholder='Название' />
-                      <input type='number' 
-                              value={countNumber}
-                              required
-                              pattern="\d+" 
-                              onChange={(e) => setCountNumber(e.target.value)} 
-                              placeholder='Количество' />
-                      <button type='submit'>Добавить</button>
-                      <button className={c.place__closeButton} 
-                              type='button' 
-                              onClick={() => setShowAddInventory(false)}
-                              style={{display: showAddInventory ? 'block' : 'none'}}>
-                        Закрыть
-                      </button>
-                    </form>
-                  </div>
-                )}
-              </>
-            ) : ''}
-        </div>
-        
-        {isThereInventory.length > 0
-        ? (
-          // Если инвентарь есть в комнате
-          <>
-            <Inventory isThereInventory={isThereInventory} 
-                       statePlaces={statePlaces} 
-                       selectedPlace={selectedPlace} />
-          </>
+          {isThereInventory.length > 0
+            ? <Inventory isThereInventory={isThereInventory} 
+                        statePlaces={statePlaces} 
+                        selectedPlace={selectedPlace} />
+            : <p>Здесь ничего нет</p> /* Если инвентаря нет в комнате */
+          }
+        </>
         ) : (
-        // Если инвентаря нет в комнате
-          <>
-            <p>Здесь ничего нет</p>
-          </>
+        <p>Выберите место, чтобы увидеть его инвентарь</p>
         )}
-      </>
-      : (
-      <p>Выберите место, чтобы увидеть его инвентарь</p>
-      )}
       </div>
     </section>
   );
